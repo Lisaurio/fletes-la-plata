@@ -23,15 +23,67 @@ const Dashboard = {
       .filter(e => e.fecha === today)
       .reduce((s, e) => s + (e.monto || 0), 0);
 
-    container.querySelector('.cards-grid').innerHTML = `
-      <div class="card"><div class="card-header"><span class="card-label">Viajes pendientes</span><div class="card-icon orange"><i class="fas fa-clock"></i></div></div><div class="card-value">${pendientes}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Viajes en curso</span><div class="card-icon blue"><i class="fas fa-play-circle"></i></div></div><div class="card-value">${enCurso}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Viajes finalizados</span><div class="card-icon green"><i class="fas fa-check-circle"></i></div></div><div class="card-value">${finalizados}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Facturación hoy</span><div class="card-icon green"><i class="fas fa-dollar-sign"></i></div></div><div class="card-value">${App.formatCurrency(facturacionHoy)}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Gastos hoy</span><div class="card-icon red"><i class="fas fa-shopping-cart"></i></div></div><div class="card-value">${App.formatCurrency(gastosHoy)}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Vehículos disponibles</span><div class="card-icon green"><i class="fas fa-check-square"></i></div></div><div class="card-value">${disponibles}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Vehículos en reparación</span><div class="card-icon orange"><i class="fas fa-wrench"></i></div></div><div class="card-value">${enReparacion}</div></div>
-      <div class="card"><div class="card-header"><span class="card-label">Vehículos en viaje</span><div class="card-icon blue"><i class="fas fa-road"></i></div></div><div class="card-value">${enViaje}</div></div>
+    container.innerHTML = `
+      <div class="section-header">
+        <h2>Dashboard</h2>
+        <div class="section-actions"></div>
+      </div>
+      <div class="launcher-grid">
+        <a class="launcher-card" href="#viajes" style="--launcher-color:var(--secondary)">
+          <div class="launcher-icon"><i class="fas fa-route"></i></div>
+          <div class="launcher-label">Viajes</div>
+        </a>
+        <a class="launcher-card" href="#vehiculos" style="--launcher-color:#3498db">
+          <div class="launcher-icon"><i class="fas fa-truck"></i></div>
+          <div class="launcher-label">Vehículos</div>
+        </a>
+        <a class="launcher-card" href="#empleados" style="--launcher-color:#27ae60">
+          <div class="launcher-icon"><i class="fas fa-users"></i></div>
+          <div class="launcher-label">Empleados</div>
+        </a>
+        <a class="launcher-card" href="#clientes" style="--launcher-color:#9b59b6">
+          <div class="launcher-icon"><i class="fas fa-building"></i></div>
+          <div class="launcher-label">Clientes</div>
+        </a>
+        <a class="launcher-card" href="#gastos" style="--launcher-color:#f39c12">
+          <div class="launcher-icon"><i class="fas fa-wallet"></i></div>
+          <div class="launcher-label">Gastos</div>
+        </a>
+        <a class="launcher-card" href="#reportes" style="--launcher-color:#1abc9c">
+          <div class="launcher-icon"><i class="fas fa-chart-bar"></i></div>
+          <div class="launcher-label">Reportes</div>
+        </a>
+        <a class="launcher-card" href="#config" style="--launcher-color:#95a5a6">
+          <div class="launcher-icon"><i class="fas fa-cog"></i></div>
+          <div class="launcher-label">Configuración</div>
+        </a>
+        <a class="launcher-card" href="#ayuda" style="--launcher-color:#e74c3c">
+          <div class="launcher-icon"><i class="fas fa-question-circle"></i></div>
+          <div class="launcher-label">Ayuda</div>
+        </a>
+      </div>
+
+      <h3 style="margin: 32px 0 16px;font-size:1.1rem;font-weight:700;color:var(--text)">Resumen del día</h3>
+
+      <div class="cards-grid">
+        <div class="card"><div class="card-header"><span class="card-label">Viajes pendientes</span><div class="card-icon orange"><i class="fas fa-clock"></i></div></div><div class="card-value">${pendientes}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Viajes en curso</span><div class="card-icon blue"><i class="fas fa-play-circle"></i></div></div><div class="card-value">${enCurso}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Viajes finalizados</span><div class="card-icon green"><i class="fas fa-check-circle"></i></div></div><div class="card-value">${finalizados}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Facturación hoy</span><div class="card-icon green"><i class="fas fa-dollar-sign"></i></div></div><div class="card-value">${App.formatCurrency(facturacionHoy)}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Gastos hoy</span><div class="card-icon red"><i class="fas fa-shopping-cart"></i></div></div><div class="card-value">${App.formatCurrency(gastosHoy)}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Vehículos disponibles</span><div class="card-icon green"><i class="fas fa-check-square"></i></div></div><div class="card-value">${disponibles}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Vehículos en reparación</span><div class="card-icon orange"><i class="fas fa-wrench"></i></div></div><div class="card-value">${enReparacion}</div></div>
+        <div class="card"><div class="card-header"><span class="card-label">Vehículos en viaje</span><div class="card-icon blue"><i class="fas fa-road"></i></div></div><div class="card-value">${enViaje}</div></div>
+      </div>
+
+      <h3 style="margin: 32px 0 16px;font-size:1.1rem;font-weight:700;color:var(--text)">Gráficos</h3>
+
+      <div class="charts-grid">
+        <div class="chart-card"><h3>Viajes por estado</h3><div class="chart-container"><canvas id="chartTripsStatus"></canvas></div></div>
+        <div class="chart-card"><h3>Disponibilidad de vehículos</h3><div class="chart-container"><canvas id="chartVehicleStatus"></canvas></div></div>
+        <div class="chart-card"><h3>Facturación últimos 7 días</h3><div class="chart-container"><canvas id="chartDailyRevenue"></canvas></div></div>
+        <div class="chart-card"><h3>Gastos por tipo</h3><div class="chart-container"><canvas id="chartExpenses"></canvas></div></div>
+      </div>
     `;
 
     this.renderCharts(trips, vehicles, expenses);

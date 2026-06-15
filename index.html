@@ -47,9 +47,13 @@
           <h1 class="header-title" id="headerTitle">Dashboard</h1>
         </div>
         <div class="header-right">
-          <a href="https://wa.link/177pv0" target="_blank" class="btn-icon" title="Contactar por WhatsApp" style="color:#25D366">
-            <i class="fab fa-whatsapp"></i>
-          </a>
+          <div class="notif-container">
+            <button class="btn-icon" id="notifBell" title="Notificaciones">
+              <i class="fas fa-bell"></i>
+              <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown"></div>
+          </div>
         </div>
       </header>
 

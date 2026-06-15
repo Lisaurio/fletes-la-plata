@@ -13,7 +13,7 @@ const App = {
   renderSidebar() {
     const nav = document.getElementById('sidebarNav');
     const items = [
-      { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+      { id: 'dashboard', icon: 'fa-home', label: 'Inicio' },
       { id: 'vehiculos', icon: 'fa-truck', label: 'Vehículos' },
       { id: 'empleados', icon: 'fa-users', label: 'Empleados' },
       { id: 'clientes', icon: 'fa-building', label: 'Clientes' },
@@ -49,6 +49,13 @@ const App = {
       const themeBtn = e.target.closest('#themeToggle');
       if (themeBtn) { this.toggleTheme(); return; }
 
+      const notifBtn = e.target.closest('#notifBell');
+      if (notifBtn && !e.target.closest('.notif-dropdown')) { this.toggleNotifications(); return; }
+
+      if (!e.target.closest('.notif-container')) {
+        document.getElementById('notifDropdown').classList.remove('show');
+      }
+
       const modalClose = e.target.closest('.modal-close, .modal-overlay');
       if (modalClose && !e.target.closest('.modal')) {
         this.closeModal();
@@ -75,7 +82,7 @@ const App = {
     if (navItem) navItem.classList.add('active');
 
     const titles = {
-      dashboard: 'Dashboard',
+      dashboard: 'Inicio',
       vehiculos: 'Vehículos',
       empleados: 'Empleados',
       clientes: 'Clientes',
@@ -88,6 +95,7 @@ const App = {
     document.getElementById('headerTitle').textContent = titles[section] || 'Dashboard';
 
     this.closeSidebar();
+    this.updateNotifBadge();
 
     switch (section) {
       case 'dashboard': Dashboard.render(); break;
@@ -204,5 +212,55 @@ const App = {
   getVehicleStatusColor(state) {
     const map = { Disponible: 'green', 'En reparación': 'orange', 'Fuera de servicio': 'red', 'En viaje': 'blue' };
     return map[state] || 'gray';
+  },
+
+  toggleNotifications() {
+    const dd = document.getElementById('notifDropdown');
+    dd.classList.toggle('show');
+    if (dd.classList.contains('show')) this.renderNotifications(dd);
+  },
+
+  renderNotifications(dd) {
+    const today = this.getToday();
+    const trips = DB.getAll('trips');
+    const vehicles = DB.getAll('vehicles');
+
+    const notifs = [];
+
+    const hoy = trips.filter(t => t.fecha === today && t.estado !== 'Cancelado');
+    if (hoy.length) notifs.push({ icon: 'fa-calendar-day', text: `${hoy.length} viaje${hoy.length > 1 ? 's' : ''} para hoy`, type: 'info' });
+
+    const pendientes = trips.filter(t => t.estado === 'Pendiente');
+    if (pendientes.length) notifs.push({ icon: 'fa-clock', text: `${pendientes.length} viaje${pendientes.length > 1 ? 's' : ''} pendiente${pendientes.length > 1 ? 's' : ''}`, type: 'warning' });
+
+    const enViaje = vehicles.filter(v => v.estado === 'En viaje');
+    if (enViaje.length) notifs.push({ icon: 'fa-road', text: `${enViaje.length} vehículo${enViaje.length > 1 ? 's' : ''} en viaje`, type: 'info' });
+
+    const enRep = vehicles.filter(v => v.estado === 'En reparación');
+    if (enRep.length) notifs.push({ icon: 'fa-wrench', text: `${enRep.length} vehículo${enRep.length > 1 ? 's' : ''} en reparación`, type: 'warning' });
+
+    const vencidos = trips.filter(t => t.fecha < today && t.estado !== 'Finalizado' && t.estado !== 'Cancelado');
+    if (vencidos.length) notifs.push({ icon: 'fa-exclamation-triangle', text: `${vencidos.length} viaje${vencidos.length > 1 ? 's' : ''} vencido${vencidos.length > 1 ? 's' : ''} sin finalizar`, type: 'error' });
+
+    if (!notifs.length) {
+      dd.innerHTML = '<div class="notif-empty">No hay notificaciones</div>';
+    } else {
+      dd.innerHTML = notifs.map(n => `
+        <div class="notif-item ${n.type}">
+          <i class="fas ${n.icon}"></i>
+          <span>${n.text}</span>
+        </div>
+      `).join('');
+    }
+  },
+
+  updateNotifBadge() {
+    const today = this.getToday();
+    const trips = DB.getAll('trips');
+    const badge = document.getElementById('notifBadge');
+    const count = trips.filter(t => t.fecha === today && t.estado !== 'Cancelado').length +
+                  trips.filter(t => t.fecha < today && t.estado !== 'Finalizado' && t.estado !== 'Cancelado').length;
+    if (count > 0) { badge.textContent = count; badge.style.display = 'flex'; }
+    else { badge.style.display = 'none'; }
   }
 };
