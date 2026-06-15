@@ -114,6 +114,7 @@ const App = {
       case 'config': Config.render(); break;
       case 'ayuda': Help.render(); break;
     }
+    this.makeTablesResponsive();
   },
 
   toggleSidebar() {
@@ -150,6 +151,7 @@ const App = {
     if (large) overlay.querySelector('.modal')?.classList.add('modal-lg');
 
     overlay.querySelector('.modal')?.scrollTo(0, 0);
+    this.makeTablesResponsive();
   },
 
   closeModal() {
@@ -258,6 +260,20 @@ const App = {
         </div>
       `).join('');
     }
+  },
+
+  makeTablesResponsive() {
+    document.querySelectorAll('.table-wrapper table').forEach(table => {
+      const headers = [];
+      table.querySelectorAll('thead th, thead td').forEach(th => {
+        headers.push(th.textContent.trim().replace(/[0-9]/g, ''));
+      });
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        tr.querySelectorAll('td').forEach((td, i) => {
+          if (headers[i]) td.setAttribute('data-label', headers[i]);
+        });
+      });
+    });
   },
 
   updateNotifBadge() {
