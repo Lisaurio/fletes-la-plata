@@ -51,6 +51,12 @@
           </button>
         </div>
         <div class="header-right">
+          <div class="install-prompt" id="installPrompt">
+            <button class="btn btn-sm btn-primary" onclick="App.showInstallHelp()">
+              <i class="fas fa-download"></i> Instalar app
+            </button>
+            <button class="install-close" onclick="App.dismissInstall()"><i class="fas fa-times"></i></button>
+          </div>
           <div class="notif-container">
             <button class="btn-icon" id="notifBell" title="Notificaciones">
               <i class="fas fa-bell"></i>

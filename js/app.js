@@ -7,6 +7,7 @@ const App = {
     this.renderSidebar();
     this.bindEvents();
     this.route();
+    this.initInstallPrompt();
     window.addEventListener('hashchange', () => this.route());
   },
 
@@ -260,6 +261,22 @@ const App = {
         </div>
       `).join('');
     }
+  },
+
+  initInstallPrompt() {
+    if (localStorage.getItem('flp-install-dismissed')) {
+      document.getElementById('installPrompt').style.display = 'none';
+    }
+  },
+
+  showInstallHelp() {
+    this.dismissInstall();
+    window.location.hash = 'ayuda';
+  },
+
+  dismissInstall() {
+    localStorage.setItem('flp-install-dismissed', '1');
+    document.getElementById('installPrompt').style.display = 'none';
   },
 
   makeTablesResponsive() {

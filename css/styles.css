@@ -1219,6 +1219,34 @@ table tr:last-child td {
   color: var(--text);
 }
 
+.install-prompt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: fadeIn 0.3s ease;
+}
+
+.install-prompt .btn { white-space: nowrap; }
+
+.install-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-size: 0.75rem;
+  transition: all var(--transition);
+}
+
+.install-close:hover { background: var(--bg); color: var(--text); }
+
+@media (max-width: 480px) {
+  .install-prompt .btn { font-size: 0.75rem; padding: 4px 8px; }
+  .install-prompt .btn i { font-size: 0.7rem; }
+}
+
 .notif-container {
   position: relative;
 }
