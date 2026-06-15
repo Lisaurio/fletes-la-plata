@@ -217,8 +217,19 @@ img { max-width: 100%; height: auto; }
 
 .menu-toggle:hover { background: var(--bg); }
 
-#btnHome { color: var(--primary); }
-#btnHome:hover { background: var(--bg); }
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.btn-back:hover { background: var(--bg); }
+.btn-back i { font-size: 0.95rem; }
 
 .header-title {
   font-size: 1.2rem;

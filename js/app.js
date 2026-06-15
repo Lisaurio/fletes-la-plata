@@ -98,7 +98,7 @@ const App = {
     document.getElementById('headerTitle').textContent = titles[section] || 'Inicio';
 
     const homeBtn = document.getElementById('btnHome');
-    homeBtn.style.display = section === 'dashboard' ? 'none' : 'flex';
+    homeBtn.style.display = section === 'dashboard' ? 'none' : 'inline-flex';
 
     this.closeSidebar();
     this.updateNotifBadge();
