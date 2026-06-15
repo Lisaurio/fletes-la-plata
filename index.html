@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#223462">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Panel de gestión para Fletes La Plata">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/webp" href="https://fleteslaplata.com/wp-content/uploads/2025/06/cropped-Icono-32x32.webp">
+  <link rel="apple-touch-icon" href="https://fleteslaplata.com/wp-content/uploads/2025/06/cropped-Icono-180x180.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <title>Fletes La Plata - Panel de Gestión</title>
+</head>
+<body>
+  <div class="app">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="https://fleteslaplata.com/wp-content/uploads/2025/06/cropped-Icono-192x192.webp" alt="FLP" loading="lazy">
+        <span>Fletes La Plata</span>
+      </div>
+      <div class="sidebar-nav" id="sidebarNav"></div>
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+          <span>Modo oscuro</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="main">
+      <header class="header">
+        <div class="header-left">
+          <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="header-title" id="headerTitle">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <a href="https://wa.link/177pv0" target="_blank" class="btn-icon" title="Contactar por WhatsApp" style="color:#25D366">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <section class="section active" id="section-dashboard">
+          <div class="section-header">
+            <h2>Dashboard</h2>
+            <div class="section-actions"></div>
+          </div>
+          <div class="cards-grid"></div>
+          <div class="charts-grid">
+            <div class="chart-card"><h3>Viajes por estado</h3><div class="chart-container"><canvas id="chartTripsStatus"></canvas></div></div>
+            <div class="chart-card"><h3>Disponibilidad de vehículos</h3><div class="chart-container"><canvas id="chartVehicleStatus"></canvas></div></div>
+            <div class="chart-card"><h3>Facturación últimos 7 días</h3><div class="chart-container"><canvas id="chartDailyRevenue"></canvas></div></div>
+            <div class="chart-card"><h3>Gastos por tipo</h3><div class="chart-container"><canvas id="chartExpenses"></canvas></div></div>
+          </div>
+        </section>
+
+        <section class="section" id="section-vehiculos">
+          <div class="section-header">
+            <h2>Vehículos</h2>
+            <div class="section-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchVehicles" placeholder="Buscar vehículo...">
+              </div>
+              <button class="btn btn-primary" onclick="Vehicles.showForm()"><i class="fas fa-plus"></i> Nuevo</button>
+            </div>
+          </div>
+          <div id="tableVehicles"></div>
+        </section>
+
+        <section class="section" id="section-empleados">
+          <div class="section-header">
+            <h2>Empleados</h2>
+            <div class="section-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchEmployees" placeholder="Buscar empleado...">
+              </div>
+              <button class="btn btn-primary" onclick="Employees.showForm()"><i class="fas fa-plus"></i> Nuevo</button>
+            </div>
+          </div>
+          <div id="tableEmployees"></div>
+        </section>
+
+        <section class="section" id="section-clientes">
+          <div class="section-header">
+            <h2>Clientes</h2>
+            <div class="section-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchClients" placeholder="Buscar cliente...">
+              </div>
+              <button class="btn btn-primary" onclick="Clients.showForm()"><i class="fas fa-plus"></i> Nuevo</button>
+            </div>
+          </div>
+          <div id="tableClients"></div>
+        </section>
+
+        <section class="section" id="section-viajes">
+          <div class="section-header">
+            <h2>Viajes</h2>
+            <div class="section-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchTrips" placeholder="Buscar viaje...">
+              </div>
+              <select id="filterTrips" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text);font-size:0.9rem">
+                <option value="">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Programado">Programado</option>
+                <option value="En curso">En curso</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+              <button class="btn btn-secondary" id="btnDayAgenda"><i class="fas fa-calendar-day"></i> Hoy</button>
+              <button class="btn btn-secondary" id="btnWeekAgenda"><i class="fas fa-calendar-week"></i> Semana</button>
+              <button class="btn btn-primary" onclick="Trips.showForm()"><i class="fas fa-plus"></i> Nuevo</button>
+            </div>
+          </div>
+          <div id="tableTrips" style="margin-bottom:24px"></div>
+          <div id="calendarContainer"></div>
+        </section>
+
+        <section class="section" id="section-gastos">
+          <div class="section-header">
+            <h2>Gastos</h2>
+            <div class="section-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchExpenses" placeholder="Buscar gasto...">
+              </div>
+              <select id="filterExpenses" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text);font-size:0.9rem">
+                <option value="">Todos</option>
+                <option value="Combustible">Combustible</option>
+                <option value="Peaje">Peaje</option>
+                <option value="Reparación">Reparación</option>
+                <option value="Sueldo">Sueldo</option>
+                <option value="Seguro">Seguro</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <button class="btn btn-primary" onclick="Expenses.showForm()"><i class="fas fa-plus"></i> Nuevo</button>
+            </div>
+          </div>
+          <div class="cards-grid" id="expensesSummary"></div>
+          <div id="tableExpenses"></div>
+        </section>
+
+        <section class="section" id="section-reportes">
+          <div class="section-header">
+            <h2>Reportes</h2>
+            <div class="section-actions"></div>
+          </div>
+          <div class="chart-card" style="margin-bottom:24px">
+            <h3>Evolución mensual (12 meses)</h3>
+            <div class="chart-container" style="height:350px"><canvas id="chartMonthly"></canvas></div>
+            <div id="monthlyTotals" style="margin-top:16px"></div>
+          </div>
+          <div id="rankings"></div>
+        </section>
+
+        <section class="section" id="section-ayuda">
+          <div class="section-header">
+            <h2>Ayuda</h2>
+            <div class="section-actions"></div>
+          </div>
+          <div class="help-section"></div>
+        </section>
+
+        <section class="section" id="section-config">
+          <div class="section-header">
+            <h2>Configuración</h2>
+            <div class="section-actions"></div>
+          </div>
+          <div id="configContent"></div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Nuevo registro</h3>
+        <button class="modal-close" onclick="App.closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="modalContent"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="App.closeModal()">Cancelar</button>
+        <button class="btn btn-primary" id="modalSaveBtn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/vehicles.js"></script>
+  <script src="js/employees.js"></script>
+  <script src="js/clients.js"></script>
+  <script src="js/trips.js"></script>
+  <script src="js/expenses.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/help.js"></script>
+  <script src="js/config.js"></script>
+  <script>
+    DB.init();
+    App.init();
+  </script>
+</body>
+</html>
