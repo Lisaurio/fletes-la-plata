@@ -43,6 +43,9 @@ const App = {
       const toggle = e.target.closest('#menuToggle');
       if (toggle) { this.toggleSidebar(); return; }
 
+      const homeBtn = e.target.closest('#btnHome');
+      if (homeBtn) { this.navigate('dashboard'); return; }
+
       const overlay = e.target.closest('#sidebarOverlay');
       if (overlay) { this.closeSidebar(); return; }
 
@@ -92,7 +95,10 @@ const App = {
       config: 'Configuración',
       ayuda: 'Ayuda',
     };
-    document.getElementById('headerTitle').textContent = titles[section] || 'Dashboard';
+    document.getElementById('headerTitle').textContent = titles[section] || 'Inicio';
+
+    const homeBtn = document.getElementById('btnHome');
+    homeBtn.style.display = section === 'dashboard' ? 'none' : 'flex';
 
     this.closeSidebar();
     this.updateNotifBadge();
