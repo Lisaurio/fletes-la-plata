@@ -269,11 +269,6 @@ const App = {
     }
   },
 
-  showInstallHelp() {
-    this.dismissInstall();
-    window.location.hash = 'ayuda';
-  },
-
   dismissInstall() {
     localStorage.setItem('flp-install-dismissed', '1');
     document.getElementById('installPrompt').style.display = 'none';
