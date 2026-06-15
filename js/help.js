@@ -1,6 +1,6 @@
 const Help = {
   render() {
-    document.getElementById('section-help').querySelector('.help-section').innerHTML = `
+    document.getElementById('section-ayuda').querySelector('.help-section').innerHTML = `
       <div class="help-card">
         <h3><i class="fas fa-mobile-alt"></i> Instalación en Android (Chrome)</h3>
         <div class="help-step">
